@@ -14,7 +14,8 @@ def download_code(code_id, dest) -> bool:
     with open('code.tgz', 'wb') as f:
         f.write(zip_file)
 
-    cmd = subprocess.Popen([f"tar -xvzf code.tgz && mv binary {dest}"], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+    cmd = subprocess.Popen(["tar", "-xvzf", "code.tgz", "&&", "mv", "binary", dest], stderr=subprocess.DEVNULL,
+                           stdout=subprocess.DEVNULL)
     cmd.communicate()
     if cmd.returncode != 0:
         return False
@@ -29,17 +30,20 @@ def download_map(map_id, dest) -> bool:
     with open('map.tgz', 'wb') as f:
         f.write(zip_file)
 
-    cmd = subprocess.Popen([f"tar -xvzf map.tgz && mv binary {dest}"], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+    cmd = subprocess.Popen([f"tar -xvzf code.tgz && mv binary {dest}"], stderr=subprocess.DEVNULL,
+                           stdout=subprocess.DEVNULL)
     cmd.communicate()
     if cmd.returncode != 0:
         return False
     return True
 
 
-def __judge() -> bool:
-    cmd = subprocess.Popen(["server --first-team=player1 --second-team=player2 --read-map=map "], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+def __judge():
+    cmd = subprocess.Popen(["server", "--first-team=player1", "--second-team=player2", "--read-map=map"],
+                           stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
     cmd.communicate()
     return cmd.returncode
+
 
 def judge(players, map_id, game_id) -> Event:
     player_name = {}
