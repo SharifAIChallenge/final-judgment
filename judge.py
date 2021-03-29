@@ -62,13 +62,13 @@ def judge(players, map_id, game_id) -> Event:
         return Event(token=game_id, status_code=EventStatus.MATCH_FAILED.value,
                      title='failed to hold the match')
 
-    for player in players:
-        with open(f'{player_name[player]}.log', 'rb') as file:
-            if not MinioClient.upload_logs(path=game_id, file=file, file_name=player):
-                return Event(token=player, status_code=EventStatus.UPLOAD_FAILED.value,
-                             title='failed to upload the player log!')
+    # for player in players:
+    #     with open(f'{player_name[player]}.log', 'rb') as file:
+    #         if not MinioClient.upload_logs(path=game_id, file=file, file_name=player):
+    #             return Event(token=player, status_code=EventStatus.UPLOAD_FAILED.value,
+    #                          title='failed to upload the player log!')
 
-    with open(f'game.log', 'rb') as file:
+    with open(f'log.json', 'rb') as file:
         if not MinioClient.upload_logs(path=game_id, file=file, file_name=game_id):
             return Event(token=game_id, status_code=EventStatus.UPLOAD_FAILED.value,
                          title='failed to upload the game log!')
