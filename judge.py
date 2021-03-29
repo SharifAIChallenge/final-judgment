@@ -14,14 +14,17 @@ def download_code(code_id, dest) -> bool:
     with open('code.tgz', 'wb') as f:
         f.write(zip_file)
 
-    cmd = subprocess.Popen(["tar", "-xvzf", "code.tgz"], stderr=subprocess.DEVNULL,
-                            stdout=subprocess.DEVNULL)
+    cmd = subprocess.Popen(["tar", "-xvzf", "code.tgz"], stderr=subprocess.DEVNULL,stdout=subprocess.DEVNULL)
     cmd.communicate()
     if cmd.returncode != 0:
         return False
 
-    cmd = subprocess.Popen(["mv", "binary", dest], stderr=subprocess.DEVNULL,
-                            stdout=subprocess.DEVNULL)
+    cmd = subprocess.Popen(["mv", "binary", dest], stderr=subprocess.DEVNULL,stdout=subprocess.DEVNULL)
+    cmd.communicate()
+    if cmd.returncode != 0:
+        return False
+    
+    cmd = subprocess.Popen(["chmod","+x",dest], stderr=subprocess.DEVNULL,stdout=subprocess.DEVNULL)
     cmd.communicate()
     if cmd.returncode != 0:
         return False
@@ -40,8 +43,8 @@ def download_map(map_id, dest) -> bool:
 
 
 def __judge():
-    cmd = subprocess.Popen(["server", "--first-team=player1", "--second-team=player2", "--read-map=map"],
-                           stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+    cmd = subprocess.Popen(["server", "--first-team=./player1", "--second-team=./player2", "--read-map=map"],
+                           stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     cmd.communicate()
     return cmd.returncode
 

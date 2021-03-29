@@ -55,7 +55,7 @@ class MinioClient:
     @staticmethod
     def get_map(map_id):
         try:
-            response = client.get_object(BucketName.Map.value, f'{map_id}')
+            response = client.get_object(BucketName.Map.value, map_id)
             return response.data
         except:
             return None
