@@ -13,7 +13,6 @@ RUN pip install -r ./requirements.txt
 ADD ./ ./
 
 # install server
-RUN mkdir code 
 RUN curl -s https://api.github.com/repos/sharifaichallenge/aic21-server/releases/latest \
 | grep "browser_download_url.*jar" \
 | cut -d : -f 2,3 \
