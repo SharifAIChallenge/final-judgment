@@ -11,6 +11,7 @@ for message in kcli.get_consumer():
     try:
         command = json.loads(message.value.decode("utf-8"))
         logging.info(f"got new record:{command}")
+        kcli.push_event(Event(token=command['game_id'], status_code=EventStatus.MATCH_STARTED.value,title='match finished successfully!').__dict__)
         event = judge(players=command['player_ids'], game_id=command['game_id'], map_id=command['map_id'])
         logging.info(f"resulting event is:{event}")
         kcli.push_event(event.__dict__)

@@ -1,6 +1,7 @@
 from minio_cli import MinioClient
 from event import Event, EventStatus
 import logging
+import subprocess
 
 logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s - %(levelname)s:%(message)s')
 
@@ -10,9 +11,13 @@ def download_code(code_id, dest) -> bool:
     if zip_file is None:
         return False
 
-    with open(dest, 'wb') as f:
+    with open('code.tgz', 'wb') as f:
         f.write(zip_file)
 
+    cmd = subprocess.Popen([f"tar -xvzf code.tgz && mv binary {dest}"], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+    cmd.communicate()
+    if cmd.returncode != 0:
+        return False
     return True
 
 
@@ -21,41 +26,47 @@ def download_map(map_id, dest) -> bool:
     if zip_file is None:
         return False
 
-    with open(dest, 'wb') as f:
+    with open('map.tgz', 'wb') as f:
         f.write(zip_file)
 
+    cmd = subprocess.Popen([f"tar -xvzf map.tgz && mv binary {dest}"], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+    cmd.communicate()
+    if cmd.returncode != 0:
+        return False
     return True
 
 
 def __judge() -> bool:
-    pass
-
+    cmd = subprocess.Popen(["server --first-team=player1 --second-team=player2 --read-map=map "], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+    cmd.communicate()
+    return cmd.returncode
 
 def judge(players, map_id, game_id) -> Event:
     player_name = {}
     for index, player in enumerate(players):
         player_name[player] = f"player{index + 1}"
         if not download_code(player, player_name[player]):
-            return Event(token_id=player, status_code=EventStatus.FILE_NOT_FOUND.value,
+            return Event(token=player, status_code=EventStatus.FILE_NOT_FOUND.value,
                          title='failed to fetch the compiled code!')
 
     if not download_map(map_id, "map"):
-        return Event(token_id=map_id, status_code=EventStatus.FILE_NOT_FOUND.value,
+        return Event(token=map_id, status_code=EventStatus.FILE_NOT_FOUND.value,
                      title='failed to fetch the map!')
 
     if not __judge():
-        pass  # todo Arshia
+        return Event(token=game_id, status_code=EventStatus.MATCH_FAILED.value,
+                     title='failed to hold the match')
 
     for player in players:
         with open(f'{player_name[player]}.log', 'rb') as file:
             if not MinioClient.upload_logs(path=game_id, file=file, file_name=player):
-                return Event(token_id=player, status_code=EventStatus.UPLOAD_FAILED.value,
+                return Event(token=player, status_code=EventStatus.UPLOAD_FAILED.value,
                              title='failed to upload the player log!')
 
     with open(f'game.log', 'rb') as file:
         if not MinioClient.upload_logs(path=game_id, file=file, file_name=game_id):
-            return Event(token_id=game_id, status_code=EventStatus.UPLOAD_FAILED.value,
+            return Event(token=game_id, status_code=EventStatus.UPLOAD_FAILED.value,
                          title='failed to upload the game log!')
 
-    return Event(token_id=game_id, status_code=EventStatus.COMPILE_SUCCESS.value,
-                 title='game successfully registered!')
+    return Event(token=game_id, status_code=EventStatus.MATCH_SUCCESS.value,
+                 title='match finished successfully!')

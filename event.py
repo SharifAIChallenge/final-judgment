@@ -17,8 +17,8 @@ class EventStatus(enum.Enum):
 
 
 class Event:
-    def __init__(self, title, token_id, status_code, message_body=""):
+    def __init__(self, title, token, status_code, message_body=""):
         self.title = title
         self.status_code = status_code
         self.message_body = message_body
-        self.token_id = token_id
+        self.token = token
