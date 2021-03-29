@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd /home/code
+java -jar /home/.server.jar $@
