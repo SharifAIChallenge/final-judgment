@@ -32,11 +32,12 @@ for e in BucketName:
 class MinioClient:
 
     @staticmethod
-    def upload_logs(file_id, file, bucket_name) -> bool:  # todo change
+    def upload_logs(path, file, file_name) -> bool:  # todo change
         content = ContentFile(file.read())
+        bucket_name = BucketName.Log.value
         try:
             client.put_object(
-                bucket_name, f'compiled/{file_id}.zip', content, length=len(content)
+                bucket_name, f'{path}/{file_name}.zip', content, length=len(content)
             )
             return True
         except Exception as e:
