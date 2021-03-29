@@ -45,6 +45,12 @@ def download_map(map_id, dest) -> bool:
 def __judge():
     cmd = subprocess.Popen(["server", "--first-team=./player1", "--second-team=./player2", "--read-map=map"],
                            stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    
+    
+    output = cmd.stdout.read()
+    error = cmd.stderr.read()
+    logging.warning(output)
+    logging.warning(error)
     cmd.communicate()
     return cmd.returncode
 
