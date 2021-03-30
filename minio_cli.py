@@ -37,7 +37,7 @@ class MinioClient:
         bucket_name = BucketName.Log.value
         try:
             client.put_object(
-                bucket_name, f'{path}/{file_name}.zip', content, length=len(content)
+                bucket_name, f'{path}/{file_name}', content, length=len(content)
             )
             return True
         except Exception as e:
