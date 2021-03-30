@@ -67,7 +67,7 @@ def judge(players, map_id, game_id) -> Event:
         return Event(token=map_id, status_code=EventStatus.FILE_NOT_FOUND.value,
                      title='failed to fetch the map!')
 
-    if __judge():
+    if __judge()!=0:
         return Event(token=game_id, status_code=EventStatus.MATCH_FAILED.value,
                      title='failed to hold the match')
 
