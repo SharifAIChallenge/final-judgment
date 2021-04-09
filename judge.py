@@ -89,6 +89,6 @@ def judge(players, map_id, game_id) -> Event:
                          title='failed to upload the game log!')
 
 
-    stats=json.load(open(LOG_FILE_NAME))[STATS_KEYNAME]
+    stats=str(json.load(open(LOG_FILE_NAME))[STATS_KEYNAME])
     return Event(token=game_id, status_code=EventStatus.MATCH_SUCCESS.value,
                  title='match finished successfully!',message_body=stats)
