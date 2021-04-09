@@ -1,8 +1,9 @@
-FROM reg.aichallenge.ir/python:3.8
+FROM reg.aichallenge.ir/aic/infra/final_judgment:275-e99b6780
+# FROM reg.aichallenge.ir/python:3.8
 
-RUN apt-get update && \
-apt install -y default-jre cmake vim curl gettext && \
-pip3 install pyinstaller
+# RUN apt-get update && \
+# apt install -y default-jre cmake vim curl gettext && \
+# pip3 install pyinstaller
 
 WORKDIR /home
 
