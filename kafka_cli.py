@@ -4,8 +4,10 @@ from os import getenv
 import json
 import logging
 
-logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s - %(levelname)s:%(message)s')
+logging.basicConfig(filename='app.log', filemode='w',
+                    format='%(asctime)s - %(levelname)s:%(message)s')
 KAFKA_ENDPOINT = getenv('KAFKA_ENDPOINT')
+KAFKA_TOPIC_CONSUMER_GROUP = getenv('KAFKA_TOPIC_CONSUMER_GROUP')
 
 
 class Topics(enum.Enum):
@@ -16,7 +18,7 @@ class Topics(enum.Enum):
 consumer = KafkaConsumer(
     Topics.PLAY_GAME.value,
     bootstrap_servers=KAFKA_ENDPOINT,
-    group_id='judge-test',
+    group_id=KAFKA_TOPIC_CONSUMER_GROUP,
     auto_offset_reset='latest',
 )
 
