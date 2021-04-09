@@ -11,6 +11,7 @@ STATS_KEYNAME = "stats"
 SERVER_OUTPUT = "Log/server/server.log"
 
 server_timeout= 5*60
+
 server_runcommand=["server", "--first-team=./player1", "--second-team=./player2", "--read-map=map"]
      
 
@@ -60,7 +61,7 @@ def download_map(map_id, dest) -> bool:
 def __judge():
 
     try:
-        output = check_output(server_runcommand, stderr=STDOUT, timeout=server_runcommand)
+        output = check_output(server_runcommand, stderr=STDOUT, timeout=server_timeout)
     except TimeoutExpired:
         return -1
     except CalledProcessError:
