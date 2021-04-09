@@ -1,3 +1,4 @@
+from subprocess import STDOUT, check_output, TimeoutExpired,CalledProcessError
 from minio_cli import MinioClient
 from event import Event, EventStatus
 import logging
@@ -9,6 +10,9 @@ LOG_FILE_NAME = "log.json"
 STATS_KEYNAME = "stats"
 SERVER_OUTPUT = "Log/server/server.log"
 
+server_timeout= 5*60
+server_runcommand=["server", "--first-team=./player1", "--second-team=./player2", "--read-map=map"]
+     
 
 logging.basicConfig(filename='app.log', filemode='w',
                     format='%(asctime)s - %(levelname)s:%(message)s')
@@ -54,15 +58,25 @@ def download_map(map_id, dest) -> bool:
 
 
 def __judge():
-    cmd = subprocess.Popen(["server", "--first-team=./player1", "--second-team=./player2", "--read-map=map"],
-                           stderr=subprocess.PIPE, stdout=subprocess.PIPE)
 
-    output = cmd.stdout.read()
-    error = cmd.stderr.read()
+    try:
+        output = check_output(server_runcommand, stderr=STDOUT, timeout=server_runcommand)
+    except TimeoutExpired:
+        return -1
+    except CalledProcessError:
+        return -1
+
+
+    # cmd = subprocess.Popen(["server", "--first-team=./player1", "--second-team=./player2", "--read-map=map"],
+    #                        stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+
+    # output = cmd.stdout.read()
+    # error = cmd.stderr.read()
     logging.warning(output)
-    logging.warning(error)
-    cmd.communicate()
-    return cmd.returncode
+    # logging.warning(error)
+    # cmd.communicate()
+    # return cmd.returncode
+    return 0
 
 
 def judge(players, map_id, game_id) -> [Event]:
