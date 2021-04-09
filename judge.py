@@ -81,6 +81,11 @@ def judge(players, map_id, game_id) -> [Event]:
     if __judge() != 0:
         resulting_events.append(Event(token=game_id, status_code=EventStatus.MATCH_FAILED.value,
                                 title='failed to hold the match'))
+    else:
+        stats = str(json.load(open(LOG_FILE_NAME))[STATS_KEYNAME])
+        resulting_events.append(Event(token=game_id, status_code=EventStatus.MATCH_SUCCESS.value,
+                 title='match finished successfully!', message_body=stats))
+    
 
     # for player in players:
     #     with open(f'{player_name[player]}.log', 'rb') as file:
@@ -98,8 +103,5 @@ def judge(players, map_id, game_id) -> [Event]:
             resulting_events.append(Event(token=game_id, status_code=EventStatus.UPLOAD_FAILED.value,
                          title='failed to upload the game server output!'))
 
-    stats = str(json.load(open(LOG_FILE_NAME))[STATS_KEYNAME])
-    resulting_events.append(Event(token=game_id, status_code=EventStatus.MATCH_SUCCESS.value,
-                 title='match finished successfully!', message_body=stats))
     
     return resulting_events
