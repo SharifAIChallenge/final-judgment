@@ -19,6 +19,8 @@ RUN curl -s https://api.github.com/repos/sharifaichallenge/aic21-server/releases
 | tr -d \" \
 | wget -i - -O .server.jar
 
+RUN curl "https://raw.githubusercontent.com/SharifAIChallenge/AIC21-Game/main/server/map.config" > map.config
+
 COPY server /usr/bin/server
 RUN chmod +x /usr/bin/server
 
