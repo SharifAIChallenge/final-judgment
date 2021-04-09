@@ -13,8 +13,10 @@ for message in kcli.get_consumer():
         logging.warning(f"got new record:{command}")
         kcli.push_event(Event(token=command['game_id'], status_code=EventStatus.MATCH_STARTED.value,
                               title='match started successfully!').__dict__)
-        event = judge(players=command['player_ids'], game_id=command['game_id'], map_id=command['map_id'])
-        logging.warning(f"resulting event is:{event}")
-        kcli.push_event(event.__dict__)
+        events = judge(players=command['player_ids'], game_id=command['game_id'], map_id=command['map_id'])
+        logging.warning(f"resulting events are:{len(events)}")
+
+        [kcli.push_event(event.__dict__) for event in events]
+    
     except Exception as e:
         logging.warning(e)
