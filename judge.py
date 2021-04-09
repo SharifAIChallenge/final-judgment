@@ -107,16 +107,17 @@ def judge(players, map_id, game_id) -> [Event]:
     #         if not MinioClient.upload_logs(path=game_id, file=file, file_name=player):
     #             return Event(token=player, status_code=EventStatus.UPLOAD_FAILED.value,
     #                          title='failed to upload the player log!')
-
-    with open(LOG_FILE_NAME, 'rb') as file:
-        if not MinioClient.upload_logs(path=game_id, file=file, file_name=game_id):
-            resulting_events.append(Event(token=game_id, status_code=EventStatus.UPLOAD_FAILED.value,
-                         title='failed to upload the game log!'))
-
+    try:
+        with open(LOG_FILE_NAME, 'rb') as file:
+            if not MinioClient.upload_logs(path=game_id, file=file, file_name=game_id):
+                resulting_events.append(Event(token=game_id, status_code=EventStatus.UPLOAD_FAILED.value,
+                            title='failed to upload the game log!'))
+    except:
+        logging.warning(f"file {LOG_FILE_NAME} didnt exist!")
+   
     with open(SERVER_OUTPUT, 'rb') as file:
         if not MinioClient.upload_logs(path=game_id, file=file, file_name=f'{game_id}.out'):
             resulting_events.append(Event(token=game_id, status_code=EventStatus.UPLOAD_FAILED.value,
-                         title='failed to upload the game server output!'))
-
+                        title='failed to upload the game server output!'))
     
     return resulting_events
