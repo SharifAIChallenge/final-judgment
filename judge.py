@@ -7,6 +7,7 @@ import json
 
 LOG_FILE_NAME="log.json"
 STATS_KEYNAME="stats"
+SERVER_OUTPUT="Log/server/server.log"
 
 
 logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s - %(levelname)s:%(message)s')
@@ -87,6 +88,12 @@ def judge(players, map_id, game_id) -> Event:
         if not MinioClient.upload_logs(path=game_id, file=file, file_name=game_id):
             return Event(token=game_id, status_code=EventStatus.UPLOAD_FAILED.value,
                          title='failed to upload the game log!')
+
+    with open(SERVER_OUTPUT, 'rb') as file:
+        if not MinioClient.upload_logs(path=game_id, file=file, file_name=f'{game_id}.out'):
+            return Event(token=game_id, status_code=EventStatus.UPLOAD_FAILED.value,
+                         title='failed to upload the game server output!')
+
 
 
     stats=str(json.load(open(LOG_FILE_NAME))[STATS_KEYNAME])
