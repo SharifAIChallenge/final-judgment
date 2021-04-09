@@ -2,6 +2,12 @@ from minio_cli import MinioClient
 from event import Event, EventStatus
 import logging
 import subprocess
+import json
+
+
+LOG_FILE_NAME="log.json"
+STATS_KEYNAME="stats"
+
 
 logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s - %(levelname)s:%(message)s')
 
@@ -77,10 +83,12 @@ def judge(players, map_id, game_id) -> Event:
     #             return Event(token=player, status_code=EventStatus.UPLOAD_FAILED.value,
     #                          title='failed to upload the player log!')
 
-    with open(f'log.json', 'rb') as file:
+    with open(LOG_FILE_NAME, 'rb') as file:
         if not MinioClient.upload_logs(path=game_id, file=file, file_name=game_id):
             return Event(token=game_id, status_code=EventStatus.UPLOAD_FAILED.value,
                          title='failed to upload the game log!')
 
+
+    stats=json.load(open(LOG_FILE_NAME))[STATS_KEYNAME]
     return Event(token=game_id, status_code=EventStatus.MATCH_SUCCESS.value,
-                 title='match finished successfully!')
+                 title='match finished successfully!',message_body=stats)
