@@ -17,6 +17,7 @@ for message in kcli.get_consumer():
         logging.warning(f"resulting events are:{len(events)}")
 
         [kcli.push_event(event.__dict__) for event in events]
-    
+
+        kcli.commit(command)
     except Exception as e:
         logging.warning(e)
