@@ -86,12 +86,14 @@ def judge(players, map_id, game_id) -> [Event]:
     for index, player in enumerate(players):
         player_name[player] = f"player{index + 1}"
         if not download_code(player, player_name[player]):
-            return Event(token=player, status_code=EventStatus.FILE_NOT_FOUND.value,
-                         title='failed to fetch the compiled code!')
+            resulting_events.append(Event(token=player, status_code=EventStatus.FILE_NOT_FOUND.value,
+                         title='failed to fetch the compiled code!'))
+            return resulting_events
 
     if not download_map(map_id, "map"):
-        return Event(token=map_id, status_code=EventStatus.FILE_NOT_FOUND.value,
-                     title='failed to fetch the map!')
+        resulting_events.append(Event(token=map_id, status_code=EventStatus.FILE_NOT_FOUND.value,
+                     title='failed to fetch the map!'))
+        return resulting_events
 
     if __judge() != 0:
         resulting_events.append(Event(token=game_id, status_code=EventStatus.MATCH_FAILED.value,
