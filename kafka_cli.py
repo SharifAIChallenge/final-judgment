@@ -10,7 +10,7 @@ logging.basicConfig(filename='app.log', filemode='w',
 KAFKA_ENDPOINT = getenv('KAFKA_ENDPOINT')
 KAFKA_TOPIC_CONSUMER_GROUP = getenv('KAFKA_TOPIC_CONSUMER_GROUP')
 
-maximum_count_of_try_to_commit = 4
+maximum_count_of_try_to_commit = 6
 
 
 class Topics(enum.Enum):
@@ -37,14 +37,17 @@ def get_consumer():
 
 
 def commit(message):
-    for t in range(1, maximum_count_of_try_to_commit):
+    for t in range(1, maximum_count_of_try_to_commit + 1):
         try:
             consumer.commit()
             return
         except Exception as e:
             logging.warning(f'fail to commit message: {message}, We will try again, error: {e}')
             time.sleep(t ** 2)
-    logging.warning(f'fail to commit message, ignore commit message: {message}')
+    try:
+        consumer.commit()
+    except Exception as e:
+        logging.warning(f'fail to commit message error: {e}, ignore commit message: {message}')
 
 
 def push_event(event) -> bool:
