@@ -9,7 +9,7 @@ logging.basicConfig(filename='app.log', filemode='w',
                     format='%(asctime)s - %(levelname)s:%(message)s')
 KAFKA_ENDPOINT = getenv('KAFKA_ENDPOINT')
 KAFKA_TOPIC_CONSUMER_GROUP = getenv('KAFKA_TOPIC_CONSUMER_GROUP')
-
+KAFKA_CONSUMER_HEART_BEAT_TIMEOUT = int(getenv('KAFKA_CONSUMER_HEART_BEAT_TIMEOUT'))
 maximum_count_of_try_to_commit = 6
 
 
@@ -24,7 +24,7 @@ consumer = KafkaConsumer(
     group_id=KAFKA_TOPIC_CONSUMER_GROUP,
     auto_offset_reset='latest',
     enable_auto_commit=True,
-    session_timeout_ms=600000
+    session_timeout_ms=KAFKA_CONSUMER_HEART_BEAT_TIMEOUT
 )
 
 producer = KafkaProducer(
