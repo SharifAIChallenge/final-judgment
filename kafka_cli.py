@@ -3,11 +3,14 @@ from kafka import KafkaConsumer, KafkaProducer
 from os import getenv
 import json
 import logging
+import time
 
 logging.basicConfig(filename='app.log', filemode='w',
                     format='%(asctime)s - %(levelname)s:%(message)s')
 KAFKA_ENDPOINT = getenv('KAFKA_ENDPOINT')
 KAFKA_TOPIC_CONSUMER_GROUP = getenv('KAFKA_TOPIC_CONSUMER_GROUP')
+
+maximum_count_of_try_to_commit = 4
 
 
 class Topics(enum.Enum):
@@ -20,6 +23,7 @@ consumer = KafkaConsumer(
     bootstrap_servers=KAFKA_ENDPOINT,
     group_id=KAFKA_TOPIC_CONSUMER_GROUP,
     auto_offset_reset='latest',
+    enable_auto_commit=False,
 )
 
 producer = KafkaProducer(
@@ -30,6 +34,16 @@ producer = KafkaProducer(
 
 def get_consumer():
     return consumer
+
+
+def commit():
+    for t in range(1, maximum_count_of_try_to_commit):
+        try:
+            consumer.commit()
+            break
+        except Exception as e:
+            logging.warning(f'fail to commit message, error: {e}')
+            time.sleep(t ** 2)
 
 
 def push_event(event) -> bool:
