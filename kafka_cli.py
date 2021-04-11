@@ -36,14 +36,15 @@ def get_consumer():
     return consumer
 
 
-def commit():
+def commit(message):
     for t in range(1, maximum_count_of_try_to_commit):
         try:
             consumer.commit()
-            break
+            return
         except Exception as e:
-            logging.warning(f'fail to commit message, error: {e}')
+            logging.warning(f'fail to commit message: {message}, We will try again, error: {e}')
             time.sleep(t ** 2)
+    logging.warning(f'fail to commit message, ignore commit message: {message}')
 
 
 def push_event(event) -> bool:
