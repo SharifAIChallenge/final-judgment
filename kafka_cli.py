@@ -24,6 +24,7 @@ consumer = KafkaConsumer(
     group_id=KAFKA_TOPIC_CONSUMER_GROUP,
     auto_offset_reset='latest',
     enable_auto_commit=False,
+    session_timeout_ms=300000
 )
 
 producer = KafkaProducer(
