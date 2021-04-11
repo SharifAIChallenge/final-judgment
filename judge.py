@@ -11,7 +11,7 @@ LOG_FILE_NAME = "log.json"
 STATS_KEYNAME = "stats"
 SERVER_OUTPUT = "Log/server/server.log"
 
-server_timeout= os.getenv("MATCH_TIMEOUT")
+server_timeout= int(os.getenv("MATCH_TIMEOUT"))
 
 server_runcommand=["server", "--first-team=./player1", "--second-team=./player2", "--read-map=map"]
      
