@@ -4,13 +4,14 @@ from event import Event, EventStatus
 import logging
 import subprocess
 import json
+import os
 
 
 LOG_FILE_NAME = "log.json"
 STATS_KEYNAME = "stats"
 SERVER_OUTPUT = "Log/server/server.log"
 
-server_timeout= 5*60
+server_timeout= os.getenv("MATCH_TIMEOUT")
 
 server_runcommand=["server", "--first-team=./player1", "--second-team=./player2", "--read-map=map"]
      
