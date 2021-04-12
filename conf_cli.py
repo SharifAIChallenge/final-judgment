@@ -1,4 +1,5 @@
 from confluent_kafka import Consumer
+import os
 import logging
 
 logger=logging.getLogger("kafka")
