@@ -15,7 +15,7 @@ for message in kcli.get_consumer():
             if t==command['game_id']:
                 continue
 
-        tokens.append['game_id']
+        tokens.append(command['game_id'])
         logging.warning(f"got new record:{command}")
         kcli.push_event(Event(token=command['game_id'], status_code=EventStatus.MATCH_STARTED.value,
                               title='match started successfully!').__dict__)
