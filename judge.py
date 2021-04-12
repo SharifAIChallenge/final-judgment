@@ -43,7 +43,7 @@ def download_code(code_id, dest) -> bool:
     cmd.communicate()
     if cmd.returncode != 0:
         return False
-    logger.ifno(f"successfuly moved binary [{code_id}] to [{dest}]")
+    logger.info(f"successfuly moved binary [{code_id}] to [{dest}]")
 
     
     # give execute permission to new binary
@@ -52,7 +52,7 @@ def download_code(code_id, dest) -> bool:
     cmd.communicate()
     if cmd.returncode != 0:
         return False
-    logger.ifno(f"[{dest}] is now executable")
+    logger.info(f"[{dest}] is now executable")
     
     return True
 
@@ -139,5 +139,5 @@ def judge(players, map_id, game_id) -> [Event]:
         if not MinioClient.upload_logs(path=game_id, file=file, file_name=f'{game_id}.out'):
             resulting_events.append(Event(token=game_id, status_code=EventStatus.UPLOAD_FAILED.value,
                         title='failed to upload the game server output!'))
-        
+
     return resulting_events
