@@ -68,10 +68,6 @@ def __judge():
     except CalledProcessError:
         return -1
 
-
-    # cmd = subprocess.Popen(["server", "--first-team=./player1", "--second-team=./player2", "--read-map=map"],
-    #                        stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-
     logging.warning(output)
     return 0
 
