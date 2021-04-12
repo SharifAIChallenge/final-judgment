@@ -35,7 +35,7 @@ while True:
 
         [kcli.push_event(event.__dict__) for event in events]
          
-        ccli.commit(message)
+        # ccli.commit(message)
 
     except Exception as e:
         traceback.print_exc()

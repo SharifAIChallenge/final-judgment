@@ -22,7 +22,7 @@ c = Consumer({
     'bootstrap.servers': KAFKA_ENDPOINT,
     'group.id': KAFKA_TOPIC_CONSUMER_GROUP,
     'auto.offset.reset': 'latest',
-    'enable.auto.commit': False,
+    'enable.auto.commit': True,
     'session.timeout.ms': 10*1000,      #10 seconds
     'max.poll.interval.ms': 30*60*1000,  #30 minutes
     'heartbeat.interval.ms': 1*1000     #1 seconds
