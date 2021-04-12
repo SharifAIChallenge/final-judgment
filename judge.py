@@ -83,7 +83,7 @@ def __judge():
         logger.info("match returned none zero exitcode!")
         return -1
 
-    logging.warning(output)
+    logger.debug(output)
     return 0
 
 
