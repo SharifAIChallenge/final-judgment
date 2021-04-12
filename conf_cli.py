@@ -1,5 +1,5 @@
 from confluent_kafka import Consumer
-import os
+from os import getenv
 import logging
 
 logger=logging.getLogger("kafka")
