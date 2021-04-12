@@ -44,7 +44,7 @@ class MinioClient:
             logger.info(f"object pushed to {bucket_name}/{path}/{file_name}")
             return True
         except Exception as e:
-            logging.exception(e)
+            logger.exception(e)
             return False
 
     @staticmethod

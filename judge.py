@@ -5,7 +5,6 @@ import logging
 import subprocess
 import json
 import os
-import logging
 
 logger=logging.getLogger("judge")
 
@@ -132,7 +131,7 @@ def judge(players, map_id, game_id) -> [Event]:
                 resulting_events.append(Event(token=game_id, status_code=EventStatus.UPLOAD_FAILED.value,
                             title='failed to upload the game log!'))
     except:
-        logging.warning(f"file {LOG_FILE_NAME} didnt exist!")
+        logger.warning(f"file {LOG_FILE_NAME} didnt exist!")
    
     # upload server log
     with open(SERVER_OUTPUT, 'rb') as file:
