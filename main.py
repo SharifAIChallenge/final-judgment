@@ -6,15 +6,22 @@ from event import Event, EventStatus
 import logging
 
 tokens=[]
+
+def token_is_seen(token):
+    for t in tokens:
+            if t==token:
+                return True
+    return False
+
 logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s - %(levelname)s:%(message)s')
 
 for message in kcli.get_consumer():
     try:
         command = json.loads(message.value.decode("utf-8"))
-        for t in tokens:
-            if t==command['game_id']:
-                continue
-
+        
+        if (token_is_seen(command['game_id'])):
+            continue
+        
         tokens.append(command['game_id'])
         logging.warning(f"got new record:{command}")
         kcli.push_event(Event(token=command['game_id'], status_code=EventStatus.MATCH_STARTED.value,
