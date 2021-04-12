@@ -5,6 +5,7 @@ import json
 from event import Event, EventStatus
 import logging
 import log
+import traceback
 
 log.init()
 logger=logging.getLogger("main")
@@ -31,6 +32,7 @@ for message in kcli.get_consumer():
 
         # kcli.commit(command)
     except Exception as e:
+         traceback.print_exc()
         logger.exception(f"an error accoured {e}")
     finally:
         log.remove_token_logger(token)
