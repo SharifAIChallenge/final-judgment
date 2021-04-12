@@ -33,11 +33,10 @@ def get_message():
     msg = c.poll()
 
     if msg is None:
-        continue
+        return None
     if msg.error():
         logger.error(f"error acurred while fetching new message: {msg.error()}")
-        print()
-        continue
+        return None
     return msg.value().decode('utf-8')
 
 def close():

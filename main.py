@@ -15,6 +15,9 @@ while True:
     token=""
     try:
         message=ccli.get_message()
+        if not message:
+            continue
+        
         logger.info(f"message is: {message}")
         command = json.loads(message)
         logger.info(f"command is:{command}")
