@@ -31,5 +31,6 @@ for message in kcli.get_consumer():
         # kcli.commit(command)
     except Exception as e:
         logger.exception(f"an error accoured {e}")
+        e.with_traceback()
     finally:
         log.remove_token_logger(token)
