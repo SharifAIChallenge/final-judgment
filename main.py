@@ -13,6 +13,7 @@ logger=logging.getLogger("main")
 for message in kcli.get_consumer():
     token=""
     try:
+        logger.info(f"message is {message.value.decode("utf-8")}")
         command = json.loads(message.value.decode("utf-8"))
         logger.info(f"command is:{command}")
         token=command['game_id']
