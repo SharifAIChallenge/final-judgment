@@ -1,6 +1,7 @@
 from confluent_kafka import Consumer
 from os import getenv
 import logging
+import enum
 
 logger=logging.getLogger("kafka")
 
