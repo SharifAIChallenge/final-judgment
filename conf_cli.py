@@ -21,7 +21,7 @@ c = Consumer({
     'auto.offset.reset': 'latest',
     'enable.auto.commit': True,
     'session.timeout.ms': 10*1000,      #10 seconds
-    'max.poll.interval.ms': 30*60*1000  #30 minutes
+    'max.poll.interval.ms': 30*60*1000,  #30 minutes
     'heartbeat.interval.ms': 1*1000     #1 seconds
 })
 
