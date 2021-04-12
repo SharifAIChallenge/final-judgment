@@ -4,6 +4,7 @@ from os import getenv
 import json
 import logging
 import time
+import random
 
 logger=logging.getLogger("kafka")
 
@@ -21,8 +22,8 @@ class Topics(enum.Enum):
 consumer = KafkaConsumer(
     Topics.PLAY_GAME.value,
     bootstrap_servers=KAFKA_ENDPOINT,
-    group_id=KAFKA_TOPIC_CONSUMER_GROUP,
-    auto_offset_reset='latest',
+    group_id=f"{KAFKA_TOPIC_CONSUMER_GROUP}-{random.randint(0,1024)}",
+    auto_offset_reset='earliest',
     enable_auto_commit=True,
     session_timeout_ms=300000
 )
