@@ -25,7 +25,8 @@ consumer = KafkaConsumer(
     group_id=f"{KAFKA_TOPIC_CONSUMER_GROUP}-{random.randint(0,1024)}",
     auto_offset_reset='earliest',
     enable_auto_commit=True,
-    session_timeout_ms=300000
+    session_timeout_ms=300000,
+    max_poll_interval_ms=1200000,
 )
 logger.info(f"consumer {consumer} is built and connected")
 
