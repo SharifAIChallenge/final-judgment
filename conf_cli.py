@@ -1,4 +1,5 @@
-from confluent_kafka import Consumer
+from confluent_kafka import Consumer,Producer
+
 from os import getenv
 import logging
 import enum
@@ -21,13 +22,16 @@ c = Consumer({
     'bootstrap.servers': KAFKA_ENDPOINT,
     'group.id': KAFKA_TOPIC_CONSUMER_GROUP,
     'auto.offset.reset': 'latest',
-    'enable.auto.commit': True,
+    'enable.auto.commit': False,
     'session.timeout.ms': 10*1000,      #10 seconds
     'max.poll.interval.ms': 30*60*1000,  #30 minutes
     'heartbeat.interval.ms': 1*1000     #1 seconds
 })
-
 c.subscribe([Topics.PLAY_GAME.value])
+
+# p = Producer({
+#     'bootstrap.servers': KAFKA_ENDPOINT,
+#     })
 
 
 def get_message():
@@ -39,7 +43,12 @@ def get_message():
     if msg.error():
         logger.error(f"error acurred while fetching new message: {msg.error()}")
         return None
-    return msg.value().decode('utf-8')
+    return msg
+
+def commit(msg):
+    c.commit(message=msg)
+
 
 def close():
     c.close()
+

@@ -17,9 +17,9 @@ while True:
         message=ccli.get_message()
         if not message:
             continue
-        
+
         logger.info(f"message is: {message}")
-        command = json.loads(message)
+        command = json.loads(message.value().decode('utf-8'))
         logger.info(f"command is:{command}")
         token=command['game_id']
         
@@ -34,8 +34,9 @@ while True:
         [logger.info(event.title) for event in events]
 
         [kcli.push_event(event.__dict__) for event in events]
+         
+        ccli.commit(message)
 
-        # kcli.commit(command)
     except Exception as e:
         traceback.print_exc()
         logger.exception(f"an error accoured {e}")
