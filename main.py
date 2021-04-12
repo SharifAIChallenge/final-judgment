@@ -6,18 +6,19 @@ from event import Event, EventStatus
 import logging
 import log
 import traceback
+import conf_cli as ccli
 
 log.init()
 logger=logging.getLogger("main")
 
-for message in kcli.get_consumer():
+while True:
     token=""
     try:
-        logger.info(f"message is {message.value.decode('utf-8')}")
-        command = json.loads(message.value.decode("utf-8"))
+        message=ccli.get_message()
+        logger.info(f"message is: {message}")
+        command = json.loads(message)
         logger.info(f"command is:{command}")
         token=command['game_id']
-        # tokens.append(command['game_id'])
         
         log.new_token_logger(command['game_id'])
         logger.info(f"got new record:{command}")
