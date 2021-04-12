@@ -2,7 +2,7 @@ import logging
 
 LOG_DIR='/var/log/final-judgment'
 loggers = ["judge", "main", "kafka", "minio"]
-    
+MAIN_LOG_FILE="judge.log"    
 class LoggerFormatter(logging.Formatter):
     name_just=70
     level_just=15
@@ -18,7 +18,7 @@ def init():
 
     # setting logger
     stdout_h = logging.StreamHandler()
-    filelg_h = logging.FileHandler(f"{LOG_DIR}/compiler.log")
+    filelg_h = logging.FileHandler(f"{LOG_DIR}/{MAIN_LOG_FILE}")
     stdout_h.setLevel(logging.INFO)
     filelg_h.setLevel(logging.INFO)
     stdout_h.setFormatter(default_format)
