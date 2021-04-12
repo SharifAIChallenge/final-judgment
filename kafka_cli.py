@@ -58,7 +58,7 @@ def push_event(event) -> bool:
     try:
         producer.send(topic=Topics.EVENTS.value, value=event)
         producer.flush()
-        logger.info(f"event pushed successfully: {event.__dict__}")
+        logger.info(f"event pushed successfully: {event}")
         return True
     except Exception as e:
         logger.exception(e)
