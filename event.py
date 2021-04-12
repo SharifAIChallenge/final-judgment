@@ -14,6 +14,8 @@ class EventStatus(enum.Enum):
     MATCH_STARTED = 500
     MATCH_FAILED = 502
     MATCH_SUCCESS = 504
+    MATCH_TIMEOUT = 506
+    
 
 
 class Event:

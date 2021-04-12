@@ -4,33 +4,28 @@ import kafka_cli as kcli
 import json
 from event import Event, EventStatus
 import logging
+import log
 
-tokens=[]
-
-def token_is_seen(token):
-    for t in tokens:
-            if t==token:
-                return True
-    return False
-
-logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s - %(levelname)s:%(message)s')
+log.init()
+logger=logging.getLogger("main")
 
 for message in kcli.get_consumer():
     try:
         command = json.loads(message.value.decode("utf-8"))
-        
-        if (token_is_seen(command['game_id'])):
-            continue
-        
+                
         tokens.append(command['game_id'])
-        logging.warning(f"got new record:{command}")
+        
+        logger.info(f"got new record:{command}")
+        
         kcli.push_event(Event(token=command['game_id'], status_code=EventStatus.MATCH_STARTED.value,
                               title='match started successfully!').__dict__)
         events = judge(players=command['player_ids'], game_id=command['game_id'], map_id=command['map_id'])
-        logging.warning(f"resulting events are:{len(events)}")
+        
+        logger.info(f"resulting events are:{len(events)}")
+        [logger.info(event.title) for event in events]
 
         [kcli.push_event(event.__dict__) for event in events]
 
         # kcli.commit(command)
     except Exception as e:
-        logging.warning(e)
+        logger.exception(f"an error accoured {e}")

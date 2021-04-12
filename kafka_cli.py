@@ -5,8 +5,8 @@ import json
 import logging
 import time
 
-logging.basicConfig(filename='app.log', filemode='w',
-                    format='%(asctime)s - %(levelname)s:%(message)s')
+logger=logging.getLogger("kafka")
+
 KAFKA_ENDPOINT = getenv('KAFKA_ENDPOINT')
 KAFKA_TOPIC_CONSUMER_GROUP = getenv('KAFKA_TOPIC_CONSUMER_GROUP')
 KAFKA_CONSUMER_HEART_BEAT_TIMEOUT = int(getenv('KAFKA_CONSUMER_HEART_BEAT_TIMEOUT'))
@@ -25,14 +25,14 @@ consumer = KafkaConsumer(
     auto_offset_reset='latest',
     enable_auto_commit=True,
     session_timeout_ms=300000
-    # request_timeout_ms=1200000,
-    # session_timeout_ms=900000#KAFKA_CONSUMER_HEART_BEAT_TIMEOUT
 )
+logger.info(f"consumer {consumer} is built and connected")
 
 producer = KafkaProducer(
     bootstrap_servers=KAFKA_ENDPOINT,
     value_serializer=lambda x: json.dumps(x).encode('utf-8')
 )
+logger.info(f"producer {consumer} is built and connected")
 
 
 def get_consumer():
@@ -45,19 +45,20 @@ def commit(message):
             consumer.commit()
             return
         except Exception as e:
-            logging.warning(f'fail to commit message: {message}, We will try again, error: {e}')
+            logger.warning(f'fail to commit message: {message}, We will try again, error: {e}')
             time.sleep(t ** 2)
     try:
         consumer.commit()
     except Exception as e:
-        logging.warning(f'fail to commit message error: {e}, ignore commit message: {message}')
+        logger.exception(f'fail to commit message error: {e}, ignore commit message: {message}')
 
 
 def push_event(event) -> bool:
     try:
         producer.send(topic=Topics.EVENTS.value, value=event)
         producer.flush()
+        logger.info("event pushed successfully")
         return True
     except Exception as e:
-        logging.warning(e)
+        logger.exception(e)
         return False
