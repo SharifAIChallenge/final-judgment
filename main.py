@@ -12,9 +12,10 @@ logger=logging.getLogger("main")
 for message in kcli.get_consumer():
     try:
         command = json.loads(message.value.decode("utf-8"))
-                
-        tokens.append(command['game_id'])
+
+        # tokens.append(command['game_id'])
         
+        log.new_token_logger(command['game_id'])
         logger.info(f"got new record:{command}")
         
         kcli.push_event(Event(token=command['game_id'], status_code=EventStatus.MATCH_STARTED.value,
@@ -29,3 +30,5 @@ for message in kcli.get_consumer():
         # kcli.commit(command)
     except Exception as e:
         logger.exception(f"an error accoured {e}")
+    finally:
+        log.remove_token_logger(command['game_id'])

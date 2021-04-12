@@ -5,6 +5,11 @@ FROM reg.aichallenge.ir/aic/infra/final_judgment:275-e99b6780
 # apt install -y default-jre cmake vim curl gettext && \
 # pip3 install pyinstaller
 
+
+# log directory
+RUN mkdir -p /var/log/final-judgment
+
+
 WORKDIR /home
 
 # install final_judgment
