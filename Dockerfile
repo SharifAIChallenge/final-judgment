@@ -28,6 +28,6 @@ RUN curl -s https://api.github.com/repos/sharifaichallenge/aic21-server/releases
 
 RUN curl "https://raw.githubusercontent.com/SharifAIChallenge/final-judgment/master/resources/map.config" > map.config
 
-COPY server /usr/bin/server
+COPY server.sh /usr/bin/server
 RUN chmod +x /usr/bin/server
 
