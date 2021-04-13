@@ -12,9 +12,8 @@ log.init()
 logger=logging.getLogger("main")
 
 while True:
-    token=""
     try:
-        message=ccli.get_message()
+        message=ccli.fetch()
         if not message:
             continue
 

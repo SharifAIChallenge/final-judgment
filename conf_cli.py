@@ -17,8 +17,7 @@ class Topics(enum.Enum):
     PLAY_GAME = getenv('KAFKA_TOPIC_PLAY_GAME')
 
 
-
-c = Consumer({
+match_consumer = Consumer({
     'bootstrap.servers': KAFKA_ENDPOINT,
     'group.id': KAFKA_TOPIC_CONSUMER_GROUP,
     'auto.offset.reset': 'latest',
@@ -27,16 +26,12 @@ c = Consumer({
     'max.poll.interval.ms': 30*60*1000,  #30 minutes
     'heartbeat.interval.ms': 1*1000     #1 seconds
 })
-c.subscribe([Topics.PLAY_GAME.value])
-
-# p = Producer({
-#     'bootstrap.servers': KAFKA_ENDPOINT,
-#     })
+match_consumer.subscribe([Topics.PLAY_GAME.value])
 
 
-def get_message():
+def fetch():
     
-    msg = c.poll()
+    msg = match_consumer.poll()
 
     if msg is None:
         return None
@@ -46,9 +41,9 @@ def get_message():
     return msg
 
 def commit(msg):
-    c.commit(message=msg)
+    match_consumer.commit(message=msg)
 
 
 def close():
-    c.close()
+    match_consumer.close()
 
