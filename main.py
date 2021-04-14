@@ -39,6 +39,7 @@ while True:
         kcli.push_event({"name":"ArshiA","token":command['game_id']})
 
         continue
+        logger.warning("he he he i am commiting!")
         ccli.c.store_offsets(message=message)
         ccli.commit(message)
 
