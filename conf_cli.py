@@ -47,6 +47,7 @@ def get_message():
     return msg
 
 def commit(msg):
+    c.store_offsets(message=message)
     c.commit(message=msg)
 
 

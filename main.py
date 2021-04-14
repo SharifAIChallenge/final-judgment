@@ -28,20 +28,15 @@ while True:
         
         kcli.push_event(Event(token=command['game_id'], status_code=EventStatus.MATCH_STARTED.value,
                               title='match started successfully!').__dict__)
-        # events = judge(players=command['player_ids'], game_id=command['game_id'], map_id=command['map_id'])
+        events = judge(players=command['player_ids'], game_id=command['game_id'], map_id=command['map_id'])
         
-        # logger.info(f"resulting events are:{len(events)}")
-        # [logger.info(event.title) for event in events]
+        logger.info(f"resulting events are:{len(events)}")
+        [logger.info(event.title) for event in events]
 
-        # [kcli.push_event(event.__dict__) for event in events]
+        [kcli.push_event(event.__dict__) for event in events]
         
-
-        kcli.push_event({"name":"ArshiA","token":command['game_id']})
-
-        exit(-20)
-        logger.warning("he he he i am commiting!")
-        ccli.c.store_offsets(message=message)
         ccli.commit(message)
+        logger.info("match was commited successfully!")
 
     except Exception as e:
         traceback.print_exc()
