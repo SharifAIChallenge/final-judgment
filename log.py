@@ -4,7 +4,7 @@ LOG_DIR='/var/log/final-judgment'
 loggers = ["judge","match_queue","events", "main", "kafka", "minio"]
 MAIN_LOG_FILE="judge.log"    
 class LoggerFormatter(logging.Formatter):
-    name_just=70
+    name_just=50
     level_just=15
     def format(self, record):
         time = self.formatTime(record, self.datefmt)
