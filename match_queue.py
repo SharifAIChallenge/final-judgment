@@ -42,6 +42,8 @@ def fetch():
 def commit(msg):
     match_consumer.store_offsets(message=msg)
     match_consumer.commit(message=msg)
+    logger.info("match was commited successfully!")
+
 
 def close():
     match_consumer.close()
