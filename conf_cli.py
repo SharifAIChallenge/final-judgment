@@ -42,7 +42,7 @@ def fetch():
     return msg
 
 def commit(msg):
-    match_consumer.store_offsets(message=message)
+    match_consumer.store_offsets(message=msg)
     match_consumer.commit(message=msg)
 
 def close():
