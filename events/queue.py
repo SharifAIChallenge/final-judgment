@@ -21,7 +21,7 @@ def __on_deliver(err,msg):
         logger.warn(f"failed to push event : [{msg}]")
         logger.warn(f"failed with error : [{err}]")        
     else:
-        print(f"event pushed successfully")
+        logger.info(f"event pushed successfully")
 
 
 def __push_data(data):

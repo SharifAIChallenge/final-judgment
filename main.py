@@ -1,5 +1,4 @@
 from judge import judge
-# import kafka_cli as kcli
 import json
 import events
 import logging
