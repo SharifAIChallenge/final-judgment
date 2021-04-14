@@ -28,7 +28,7 @@ while True:
         events.push(events.Event(token=command['game_id'], status_code=events.EventStatus.MATCH_STARTED.value,
                               title='match started successfully!'))
         event_list = judge(players=command['player_ids'], game_id=command['game_id'], map_id=command['map_id'])
-        logger.info(f"resulting events are:{len(events_list)}")
+        logger.info(f"resulting events are:{len(event_list)}")
       
         events.push_all(event_list)
         mq.commit(message)
