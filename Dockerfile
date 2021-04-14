@@ -1,4 +1,3 @@
-# FROM reg.aichallenge.ir/aic/infra/final_judgment:275-e99b6780
 FROM reg.aichallenge.ir/python:3.8
 
 RUN apt-get update && \
@@ -9,23 +8,35 @@ apt install -y default-jre vim curl gettext
 RUN mkdir -p /var/log/final-judgment
 
 
-WORKDIR /home
+#################################### install final_judgment ########################### 
 
-# install final_judgment
+WORKDIR /home
 ADD ./requirements.txt ./requirements.txt
 ENV PIP_NO_CACHE_DIR 1
 RUN pip install -r ./requirements.txt
-ADD ./ ./
+ADD ./src ./src
 
-# install server
-RUN curl -s https://api.github.com/repos/sharifaichallenge/aic21-server/releases/latest \
+#################################### install match holder #############################
+
+# download server jar file
+RUN mkdir -p /usr/local/match && \
+curl -s https://api.github.com/repos/sharifaichallenge/aic21-server/releases/latest \
 | grep "browser_download_url.*jar" \
 | cut -d : -f 2,3 \
-| tr -d \" \
-| wget -i - -O .server.jar
+| tr -d '"' \
+| wget -i - -O /usr/local/match/match.jar
 
-RUN curl "https://raw.githubusercontent.com/SharifAIChallenge/final-judgment/master/resources/map.config" > map.config
+# download server configfile
+RUN curl "https://raw.githubusercontent.com/SharifAIChallenge/final-judgment/master/resources/map.config" > /usr/local/match/map.config
 
-COPY server /usr/bin/server
-RUN chmod +x /usr/bin/server
+# install match 
+COPY scripts/match.sh /usr/bin/match
+RUN chmod +x /usr/bin/match
 
+
+################################### install spawn #####################################
+COPY scripts/spawn.sh /usr/bin/spawn
+RUN chmod +x /usr/bin/spawn && mkdir /etc/spawn
+
+
+WORKDIR /home/src
