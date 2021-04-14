@@ -14,7 +14,7 @@ STATS_KEYNAME = "stats"
 
 match_timeout= int(os.getenv("MATCH_TIMEOUT"))
 match_runcommand=["match", "--first-team=spawn1", "--second-team=spawn2", "--read-map=map"]
-match_base_dir="/usr/local/match"
+match_base_dir="/tmp/match"
 match_record_path = f"{match_base_dir}/log.json"
 match_log_path = f"{match_base_dir}/Log/server/server.log"
 
@@ -55,6 +55,9 @@ def download_code(code_id, dest) -> bool:
         return False
     logger.info(f"[{dest}] is now executable")
     
+
+    # cleanup the code.tgz file
+    os.remove("code.tgz")
     return True
 
 
@@ -87,10 +90,26 @@ def __judge():
     logger.debug(output)
     return 0
 
+def new_isol_area():
+    try:
+        os.mkdir(match_base_dir)
+    except FileExistsError:
+        os.rmdir(match_base_dir)
+        logger.warning("directory already existed, removing it...")
+        os.mkdir(match_base_dir)
+    logger.info(f"new isolated area is creaed in [{match_base_dir}]")
+
+def rm_isol_area():
+    os.rmdir(match_base_dir)
+    logger.info(f"isolated area is removed")
+
 
 def judge(players, map_id, game_id) -> [Event]:
     resulting_events = []
-    
+
+    # make an isolate area
+    new_isol_area()
+        
     # downloading players code
     for index, player in enumerate(players):
         if not download_code(player, f"/etc/spawn/{index+1}"):
@@ -138,5 +157,9 @@ def judge(players, map_id, game_id) -> [Event]:
         if not MinioClient.upload_logs(path=game_id, file=file, file_name=f'{game_id}.out'):
             resulting_events.append(Event(token=game_id, status_code=EventStatus.UPLOAD_FAILED.value,
                         title='failed to upload the game server output!'))
+
+
+    # clean up
+    rm_isol_area()
 
     return resulting_events
