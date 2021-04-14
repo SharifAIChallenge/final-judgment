@@ -20,7 +20,7 @@ while True:
         logger.info(f"command is:{command}")
         
         token=command['game_id']
-        players=command['game_ids']
+        players=command['player_ids']
         map_id=command['map_id']
         
         log.new_token_logger(token)
