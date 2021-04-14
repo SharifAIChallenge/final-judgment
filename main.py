@@ -1,7 +1,7 @@
 from judge import judge
 import kafka_cli as kcli
 import json
-from event import Event, EventStatus
+from events import Event, EventStatus
 import logging
 import log
 import traceback

@@ -1,6 +1,6 @@
 from subprocess import STDOUT, check_output, TimeoutExpired,CalledProcessError
 from minio_cli import MinioClient
-from event import Event, EventStatus
+from events import Event, EventStatus
 import logging
 import subprocess
 import json
