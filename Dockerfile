@@ -2,7 +2,7 @@
 FROM reg.aichallenge.ir/python:3.8
 
 RUN apt-get update && \
-apt install -y default-jre cmake vim curl gettext
+apt install -y default-jre vim curl gettext
 
 
 # log directory
