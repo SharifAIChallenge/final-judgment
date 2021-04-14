@@ -1,4 +1,3 @@
-import enum
 from judge import judge
 import kafka_cli as kcli
 import json
@@ -6,14 +5,14 @@ from event import Event, EventStatus
 import logging
 import log
 import traceback
-import conf_cli as ccli
+import match_queue as mq
 
 log.init()
 logger=logging.getLogger("main")
 
 while True:
     try:
-        message=ccli.fetch()
+        message=mq.fetch()
         if not message:
             continue
 
@@ -34,7 +33,7 @@ while True:
 
         [kcli.push_event(event.__dict__) for event in events]
         
-        ccli.commit(message)
+        mq.commit(message)
         logger.info("match was commited successfully!")
 
     except Exception as e:

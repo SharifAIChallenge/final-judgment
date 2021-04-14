@@ -1,16 +1,14 @@
-from confluent_kafka import Consumer,Producer
+from confluent_kafka import Consumer
 
 from os import getenv
 import logging
 import enum
 
-logger=logging.getLogger("kafka")
+logger=logging.getLogger("match_queue")
 
 KAFKA_ENDPOINT = getenv('KAFKA_ENDPOINT')
 KAFKA_TOPIC_CONSUMER_GROUP = getenv('KAFKA_TOPIC_CONSUMER_GROUP')
 KAFKA_CONSUMER_HEART_BEAT_TIMEOUT = int(getenv('KAFKA_CONSUMER_HEART_BEAT_TIMEOUT'))
-maximum_count_of_try_to_commit = 6
-
 
 class Topics(enum.Enum):
     EVENTS = getenv('KAFKA_TOPIC_EVENTS')
