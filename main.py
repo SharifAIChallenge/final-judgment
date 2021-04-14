@@ -11,6 +11,7 @@ log.init()
 logger=logging.getLogger("main")
 
 while True:
+    token=""
     try:
         message=mq.fetch()
         if not message:
