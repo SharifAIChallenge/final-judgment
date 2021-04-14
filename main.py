@@ -37,7 +37,9 @@ while True:
         
 
         kcli.push_event({"name":"ArshiA","token":command['game_id']})
+
         continue
+        ccli.c.store_offsets(message=message)
         ccli.commit(message)
 
     except Exception as e:
