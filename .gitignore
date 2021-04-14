@@ -106,4 +106,4 @@ env
 
 Gamein_data/
 collected_static/
-./vscode
+.vscode/
