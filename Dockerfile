@@ -36,6 +36,11 @@ RUN chmod +x /usr/bin/match
 
 ################################### install spawn #####################################
 COPY scripts/spawn.sh /usr/bin/spawn
-RUN chmod +x /usr/bin/spawn && mkdir /etc/spawn
+COPY scripts/spawn1.sh /usr/bin/spawn1
+COPY scripts/spawn2.sh /usr/bin/spawn2
+
+RUN chmod +x /usr/bin/spawn && mkdir /etc/spawn && \
+chmod +x /usr/bin/spawn1 && mkdir /etc/spawn1 && \
+chmod +x /usr/bin/spawn2 && mkdir /etc/spawn2
 
 WORKDIR /home/src
