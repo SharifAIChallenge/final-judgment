@@ -1,7 +1,7 @@
 from judge import judge
 import kafka_cli as kcli
 import json
-from events import Event, EventStatus
+import events
 import logging
 import log
 import traceback
@@ -25,14 +25,15 @@ while True:
         log.new_token_logger(command['game_id'])
         logger.info(f"got new record:{command}")
         
-        kcli.push_event(Event(token=command['game_id'], status_code=EventStatus.MATCH_STARTED.value,
+        events.push(events.Event(token=command['game_id'], status_code=events.EventStatus.MATCH_STARTED.value,
                               title='match started successfully!').__dict__)
-        events = judge(players=command['player_ids'], game_id=command['game_id'], map_id=command['map_id'])
+        event_list = judge(players=command['player_ids'], game_id=command['game_id'], map_id=command['map_id'])
         
-        logger.info(f"resulting events are:{len(events)}")
-        [logger.info(event.title) for event in events]
+        logger.info(f"resulting events are:{len(events_list)}")
+        # [logger.info(event.title) for event in event_list]
 
-        [kcli.push_event(event.__dict__) for event in events]
+        events.push_all(event_list)
+        # [kcli.push_event(event.__dict__) for event in events]
         
         mq.commit(message)
         logger.info("match was commited successfully!")
