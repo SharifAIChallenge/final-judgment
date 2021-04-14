@@ -5,6 +5,8 @@ import logging
 import subprocess
 import json
 import os
+import shutil
+
 
 logger=logging.getLogger("judge")
 
@@ -94,13 +96,13 @@ def new_isol_area():
     try:
         os.mkdir(match_base_dir)
     except FileExistsError:
-        os.rmdir(match_base_dir)
+        shutil.rmtree(match_base_dir)
         logger.warning("directory already existed, removing it...")
         os.mkdir(match_base_dir)
     logger.info(f"new isolated area is creaed in [{match_base_dir}]")
 
 def rm_isol_area():
-    os.rmdir(match_base_dir)
+    shutil.rmtree(match_base_dir)
     logger.info(f"isolated area is removed")
 
 
