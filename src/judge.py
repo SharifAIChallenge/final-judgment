@@ -16,7 +16,7 @@ match_base_dir="/tmp/match"
 match_record_path = f"{match_base_dir}/log.json"
 match_log_path = f"{match_base_dir}/Log/server/server.log"
 match_timeout= int(os.getenv("MATCH_TIMEOUT"))
-match_runcommand=["(cd",match_base_dir,"&&","match", "--first-team=spawn1", "--second-team=spawn2", "--read-map=map",")"]
+match_runcommand=["match", "--first-team=spawn1", "--second-team=spawn2", "--read-map=map"]
 
 
 def download_code(code_id, dest) -> bool:
