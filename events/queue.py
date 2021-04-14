@@ -11,8 +11,8 @@ KAFKA_TOPIC_EVENTS = getenv('KAFKA_TOPIC_EVENTS')
 
 p = Producer({'bootstrap.servers': KAFKA_ENDPOINT})
 
-def __serilize(dict):
-    return json.dumps(dict).encode('utf-8')
+def __serilize(dic):
+    return json.dumps(dic).encode('utf-8')
 
 def __on_deliver(err,msg):
     """ Called once for each message produced to indicate delivery result.
