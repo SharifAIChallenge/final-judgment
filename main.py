@@ -26,7 +26,7 @@ while True:
         logger.info(f"got new record:{command}")
         
         events.push(events.Event(token=command['game_id'], status_code=events.EventStatus.MATCH_STARTED.value,
-                              title='match started successfully!').__dict__)
+                              title='match started successfully!'))
         event_list = judge(players=command['player_ids'], game_id=command['game_id'], map_id=command['map_id'])
         logger.info(f"resulting events are:{len(events_list)}")
       
