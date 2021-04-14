@@ -33,8 +33,9 @@ while True:
         [logger.info(event.title) for event in events]
 
         [kcli.push_event(event.__dict__) for event in events]
-         
-        # ccli.commit(message)
+        
+        ccli.commit(message)
+        logger.info("match was commited successfully!")
 
     except Exception as e:
         traceback.print_exc()
