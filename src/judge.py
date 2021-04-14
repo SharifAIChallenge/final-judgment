@@ -10,12 +10,14 @@ logger=logging.getLogger("judge")
 
 
 
-LOG_FILE_NAME = "log.json"
 STATS_KEYNAME = "stats"
-SERVER_OUTPUT = "Log/server/server.log"
 
-server_timeout= int(os.getenv("MATCH_TIMEOUT"))
-server_runcommand=["match", "--first-team='spawn 1'", "--second-team='spawn 2", "--read-map=map"]
+match_timeout= int(os.getenv("MATCH_TIMEOUT"))
+match_runcommand=["match", "--first-team='spawn 1'", "--second-team='spawn 2", "--read-map=map"]
+match_base_dir="/usr/local/match"
+match_record_path = f"{match_base_dir}/log.json"
+match_log_path = f"{match_base_dir}/Log/server/server.log"
+
 
 def download_code(code_id, dest) -> bool:
     logger.info(f"start processing code [{code_id}]")
@@ -73,7 +75,7 @@ def __judge():
 
     try:
         logger.info("match started")
-        output = check_output(server_runcommand, stderr=STDOUT, timeout=server_timeout)
+        output = check_output(match_runcommand, stderr=STDOUT, timeout=match_timeout)
         logger.info("match held successfully")
     except TimeoutExpired:
         logger.info("match timeout exiceded!")
@@ -97,7 +99,7 @@ def judge(players, map_id, game_id) -> [Event]:
             return resulting_events
 
     # download map
-    if not download_map(map_id, "/usr/local/match/map"):
+    if not download_map(map_id, f"{match_base_dir}/map"):
         resulting_events.append(Event(token=map_id, status_code=EventStatus.FILE_NOT_FOUND.value,
                      title='failed to fetch the map!'))
         return resulting_events
@@ -111,7 +113,7 @@ def judge(players, map_id, game_id) -> [Event]:
         resulting_events.append(Event(token=game_id, status_code=EventStatus.MATCH_TIMEOUT.value,
                                 title='match timeout exceeded'))    
     elif exit_code == 0:
-        stats = str(json.load(open(LOG_FILE_NAME))[STATS_KEYNAME])
+        stats = str(json.load(open(match_record_path))[STATS_KEYNAME])
         resulting_events.append(Event(token=game_id, status_code=EventStatus.MATCH_SUCCESS.value,
                  title='match finished successfully!', message_body=stats))
     
@@ -124,15 +126,15 @@ def judge(players, map_id, game_id) -> [Event]:
 
     # upload game log
     try:
-        with open(LOG_FILE_NAME, 'rb') as file:
+        with open(match_record_path, 'rb') as file:
             if not MinioClient.upload_logs(path=game_id, file=file, file_name=game_id):
                 resulting_events.append(Event(token=game_id, status_code=EventStatus.UPLOAD_FAILED.value,
                             title='failed to upload the game log!'))
     except:
-        logger.warning(f"file {LOG_FILE_NAME} didnt exist!")
+        logger.warning(f"file {match_record_path} didnt exist!")
    
     # upload server log
-    with open(SERVER_OUTPUT, 'rb') as file:
+    with open(match_log_path, 'rb') as file:
         if not MinioClient.upload_logs(path=game_id, file=file, file_name=f'{game_id}.out'):
             resulting_events.append(Event(token=game_id, status_code=EventStatus.UPLOAD_FAILED.value,
                         title='failed to upload the game server output!'))
