@@ -19,17 +19,6 @@ class Topics(enum.Enum):
     PLAY_GAME = getenv('KAFKA_TOPIC_PLAY_GAME')
 
 
-consumer = KafkaConsumer(
-    Topics.PLAY_GAME.value,
-    bootstrap_servers=KAFKA_ENDPOINT,
-    group_id=f"{KAFKA_TOPIC_CONSUMER_GROUP}",
-    auto_offset_reset='latest',
-    enable_auto_commit=True,
-    session_timeout_ms=300000,
-    max_poll_interval_ms=1200000,
-)
-logger.info(f"consumer {consumer} is built and connected")
-
 producer = KafkaProducer(
     bootstrap_servers=KAFKA_ENDPOINT,
     value_serializer=lambda x: json.dumps(x).encode('utf-8')

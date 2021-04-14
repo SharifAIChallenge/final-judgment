@@ -1,7 +1,7 @@
 import logging
 
 LOG_DIR='/var/log/final-judgment'
-loggers = ["judge","match_queue", "main", "kafka", "minio"]
+loggers = ["judge","match_queue","events", "main", "kafka", "minio"]
 MAIN_LOG_FILE="judge.log"    
 class LoggerFormatter(logging.Formatter):
     name_just=70
