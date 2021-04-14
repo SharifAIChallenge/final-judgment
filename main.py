@@ -35,8 +35,9 @@ while True:
 
         # [kcli.push_event(event.__dict__) for event in events]
         
-        
+
         kcli.push_event({"name":"ArshiA","token":command['game_id']})
+        exit(-50)
         ccli.commit(message)
 
     except Exception as e:
