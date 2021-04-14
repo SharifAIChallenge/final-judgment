@@ -39,7 +39,7 @@ def push(event):
     p.flush()
 
 def push_all(events):
-    [__push_data(event) for event in events]
+    [__push_data(event.__dict__) for event in events]
     p.flush()
 
 
