@@ -15,7 +15,7 @@ STATS_KEYNAME = "stats"
 SERVER_OUTPUT = "Log/server/server.log"
 
 server_timeout= int(os.getenv("MATCH_TIMEOUT"))
-server_runcommand=["server", "--first-team=./player1", "--second-team=./player2", "--read-map=map"]
+server_runcommand=["match", "--first-team='spawn 1'", "--second-team='spawn 2", "--read-map=map"]
 
 def download_code(code_id, dest) -> bool:
     logger.info(f"start processing code [{code_id}]")
@@ -90,16 +90,14 @@ def judge(players, map_id, game_id) -> [Event]:
     resulting_events = []
     
     # downloading players code
-    player_name = {}
     for index, player in enumerate(players):
-        player_name[player] = f"player{index + 1}"
-        if not download_code(player, player_name[player]):
+        if not download_code(player, f"/etc/spawn/{index+1}"):
             resulting_events.append(Event(token=player, status_code=EventStatus.FILE_NOT_FOUND.value,
                          title='failed to fetch the compiled code!'))
             return resulting_events
 
     # download map
-    if not download_map(map_id, "map"):
+    if not download_map(map_id, "/usr/local/match/map"):
         resulting_events.append(Event(token=map_id, status_code=EventStatus.FILE_NOT_FOUND.value,
                      title='failed to fetch the map!'))
         return resulting_events

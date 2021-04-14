@@ -38,5 +38,4 @@ RUN chmod +x /usr/bin/match
 COPY scripts/spawn.sh /usr/bin/spawn
 RUN chmod +x /usr/bin/spawn && mkdir /etc/spawn
 
-
 WORKDIR /home/src
