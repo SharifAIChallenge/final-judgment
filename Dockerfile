@@ -37,3 +37,6 @@ RUN curl "https://raw.githubusercontent.com/SharifAIChallenge/final-judgment/mas
 COPY scripts/match.sh /usr/bin/match
 RUN chmod +x /usr/bin/match
 
+
+################################### install client spawn ############################
+
