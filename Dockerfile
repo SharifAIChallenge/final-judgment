@@ -1,4 +1,5 @@
-FROM reg.aichallenge.ir/python:3.8
+FROM reg.aichallenge.ir/aic/infra/final_judgment:361-8b8cf820 
+# FROM reg.aichallenge.ir/python:3.8
 
 RUN apt-get update && \
 apt install -y default-jre vim curl gettext
