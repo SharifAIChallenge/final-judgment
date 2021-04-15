@@ -1,10 +1,8 @@
-from judge import judge
-import json
 import events
 import logging
 import log
 import traceback
-import match_queue as mq
+from match import match_queue as mq
 
 log.init()
 logger=logging.getLogger("main")
@@ -12,26 +10,19 @@ logger=logging.getLogger("main")
 while True:
     token=""
     try:
-        message=mq.fetch()
-        if not message:
+        match=mq.fetch()
+        if not match:
             continue
-
-        command = json.loads(message.value().decode('utf-8'))
-        logger.info(f"command is:{command}")
         
-        token=command['game_id']
-        players=command['player_ids']
-        map_id=command['map_id']
-        
+        token=match.game_id
         log.new_token_logger(token)
-        logger.info(f"got new record:{command}")
-        
         events.push(events.Event(token=token, status_code=events.EventStatus.MATCH_STARTED.value,title='match started successfully!'))
-        # event_list = judge(players=players, game_id=token, map_id=map_id)
-        # logger.info(f"resulting events are:{len(event_list)}")
-        exit(0)
+        
+        event_list = match.hold()
+        logger.info(f"resulting events are:{len(event_list)}")
+      
         events.push_all(event_list)
-        mq.commit(message)
+        mq.commit(match)
       
     except Exception as e:
         traceback.print_exc()

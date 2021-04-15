@@ -1,5 +1,5 @@
 from subprocess import STDOUT, check_output, TimeoutExpired,CalledProcessError
-from minio_cli import MinioClient
+from match.minio_cli import MinioClient 
 from events import Event, EventStatus
 import logging
 import subprocess
@@ -76,17 +76,17 @@ def download_map(map_id, dest) -> bool:
     
 
 
-def __judge():
+def __judge() -> int:
 
     try:
         logger.info("match started")
         output = check_output(match_runcommand, stderr=STDOUT, timeout=match_timeout)
         logger.info("match held successfully")
     except TimeoutExpired:
-        logger.info("match timeout exiceded!")
+        logger.warning("match timeout exiceded!")
         return -2
     except CalledProcessError:
-        logger.info("match returned none zero exitcode!")
+        logger.warning("match returned none zero exitcode!")
         return -1
 
     logger.debug(output)
@@ -139,6 +139,7 @@ def judge(players, map_id, game_id) -> [Event]:
                  title='match finished successfully!', message_body=stats))
     
 
+    # used for uploading clients logs if needed
     # for player in players:
     #     with open(f'{player_name[player]}.log', 'rb') as file:
     #         if not MinioClient.upload_logs(path=game_id, file=file, file_name=player):

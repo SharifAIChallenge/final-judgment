@@ -1,18 +1,16 @@
 from confluent_kafka import Consumer
-
 from os import getenv
 import logging
-import enum
+import json
+
+from match.match import Match
 
 logger=logging.getLogger("match_queue")
 
 KAFKA_ENDPOINT = getenv('KAFKA_ENDPOINT')
 KAFKA_TOPIC_CONSUMER_GROUP = getenv('KAFKA_TOPIC_CONSUMER_GROUP')
 KAFKA_CONSUMER_HEART_BEAT_TIMEOUT = int(getenv('KAFKA_CONSUMER_HEART_BEAT_TIMEOUT'))
-
-class Topics(enum.Enum):
-    EVENTS = getenv('KAFKA_TOPIC_EVENTS')
-    PLAY_GAME = getenv('KAFKA_TOPIC_PLAY_GAME')
+KAFKA_TOPIC_PLAY_GAME = getenv('KAFKA_TOPIC_PLAY_GAME')
 
 
 match_consumer = Consumer({
@@ -25,10 +23,12 @@ match_consumer = Consumer({
     'max.poll.interval.ms': 30*60*1000,  #30 minutes
     'heartbeat.interval.ms': 1*1000     #1 seconds
 })
-match_consumer.subscribe([Topics.PLAY_GAME.value])
+match_consumer.subscribe([KAFKA_TOPIC_PLAY_GAME])
 
 
-def fetch():
+fetched=[]
+
+def fetch() -> Match:
     
     msg = match_consumer.poll()
 
@@ -37,9 +37,20 @@ def fetch():
     if msg.error():
         logger.error(f"error acurred while fetching new message: {msg.error()}")
         return None
-    return msg
+    
+    command = json.loads(msg.value().decode('utf-8'))
+    logger.info(f"match is :{command}")
+    
+    m=Match(game_id=command['game_id'],map_id=command['map_id'],player_ids=command['player_ids'])
+    fetched.append((m.game_id,msg))
+    return m
 
-def commit(msg):
+def __get_message(match):
+    index=[i for i,m in enumerate(fetched) if m[0]==match.game_id][0]
+    return fetched.pop(index)[1]
+
+def commit(match):
+    msg=__get_message(match)
     match_consumer.store_offsets(message=msg)
     match_consumer.commit(message=msg)
     logger.info("match was commited successfully!")
