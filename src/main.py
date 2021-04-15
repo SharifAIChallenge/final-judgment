@@ -18,9 +18,11 @@ while True:
         log.new_token_logger(token)
         events.push(events.Event(token=token, status_code=events.EventStatus.MATCH_STARTED.value,title='match started successfully!'))
         
-        event_list = match.hold()
-        logger.info(f"resulting events are:{len(event_list)}")
-      
+        # event_list = match.hold()
+        # logger.info(f"resulting events are:{len(event_list)}")
+        
+        events.push(events.Event(token=token, status_code=events.EventStatus.MATCH_SUCCESS.value,title='match finished successfully!'))
+        
         events.push_all(event_list)
         mq.commit(match)
       
