@@ -22,7 +22,7 @@ while True:
         logger.info(f"resulting events are:{len(event_list)}")
       
         events.push_all(event_list)
-        mq.commit(message)
+        mq.commit(match)
       
     except Exception as e:
         traceback.print_exc()
