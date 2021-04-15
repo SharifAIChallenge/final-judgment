@@ -38,11 +38,11 @@ def fetch() -> Match:
         logger.error(f"error acurred while fetching new message: {msg.error()}")
         return None
     
-    command = json.loads(message.value().decode('utf-8'))
+    command = json.loads(msg.value().decode('utf-8'))
     logger.info(f"match is :{command}")
     
     m=Match(game_id=command['game_id'],map_id=command['map_id'],player_ids=command['player_ids'])
-    fetched.append((m.game_id,message))
+    fetched.append((m.game_id,msg))
     return m
 
 def __get_message(match):
