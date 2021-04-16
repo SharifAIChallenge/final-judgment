@@ -88,7 +88,10 @@ def __judge() -> int:
     except CalledProcessError:
         logger.warning("match returned none zero exitcode!")
         return -1
-
+    finally:
+        os.system("kill -9 `ps -aux | grep spawn | awk '{print$2}'`")
+        
+        
     logger.debug(output)
     return 0
 
