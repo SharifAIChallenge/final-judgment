@@ -15,7 +15,7 @@ while True:
             continue
         
         token=match.game_id
-        log.new_token_logger(token)
+        # log.new_token_logger(token)
         events.push(events.Event(token=token, status_code=events.EventStatus.MATCH_STARTED.value,title='match started successfully!'))
         
         event_list = match.hold()
@@ -27,5 +27,5 @@ while True:
     except Exception as e:
         traceback.print_exc()
         logger.exception(f"an error accoured {e}")
-    finally:
-        log.remove_token_logger(token)
+    # finally:
+        # log.remove_token_logger(token)
