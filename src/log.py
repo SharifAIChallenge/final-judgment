@@ -19,6 +19,7 @@ def init():
     # setting logger
     stdout_h = logging.StreamHandler()
     filelg_h = logging.FileHandler(f"{LOG_DIR}/{MAIN_LOG_FILE}")
+    
     stdout_h.setLevel(logging.INFO)
     filelg_h.setLevel(logging.INFO)
     stdout_h.setFormatter(default_format)
@@ -28,7 +29,8 @@ def init():
         logger = logging.getLogger(logger_name)
         logger.setLevel(logging.INFO)
         logger.addHandler(stdout_h)
-        logger.addHandler(filelg_h)
+        ### file logger is commented due to disk consuming issues (but you can uncomment it for debbuging purpocess)
+        # logger.addHandler(filelg_h)
 
 
 def new_token_logger(token):
