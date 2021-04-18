@@ -28,25 +28,24 @@ match_consumer.subscribe([KAFKA_TOPIC_MATCH])
 fetched=[]
 
 def fetch() -> Match:
-    while True:
-        msg = match_consumer.poll()
+    msg = match_consumer.poll()
 
-        if msg is None:
-            return None
-        if msg.error():
-            logger.error(f"error acurred while fetching new message: {msg.error()}")
-            return None
+    if msg is None:
+        return None
+    if msg.error():
+        logger.error(f"error acurred while fetching new message: {msg.error()}")
+        return None
+    
+    try:
+        command = json.loads(msg.value().decode('utf-8'))
+        logger.info(f"match is :{command}")
         
-        try:
-            command = json.loads(msg.value().decode('utf-8'))
-            logger.info(f"match is :{command}")
-            
-            m=Match(game_id=command['game_id'],map_id=command['map_id'],player_ids=command['player_ids'])
-            fetched.append((m.game_id,msg))
-            return m
-        except:
-            match_consumer.commit(message=msg)
-    return None
+        m=Match(game_id=command['game_id'],map_id=command['map_id'],player_ids=command['player_ids'])
+        fetched.append((m.game_id,msg))
+        return m
+    except:
+        match_consumer.commit(message=msg)
+        return None
 
 def __get_message(match):
     index=[i for i,m in enumerate(fetched) if m[0]==match.game_id][0]
