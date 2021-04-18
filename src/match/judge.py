@@ -120,12 +120,17 @@ def judge(players, map_id, game_id) -> [Event]:
         if not download_code(player, f"/etc/spawn/{index+1}"):
             resulting_events.append(Event(token=player, status_code=EventStatus.FILE_NOT_FOUND.value,
                          title='failed to fetch the compiled code!'))
+            resulting_events.append(Event(token=game_id, status_code=EventStatus.MATCH_NOT_PROVIDED.value,
+                         title='failed to fetch clients code!'))
+
             return resulting_events
 
     # download map
     if not download_map(map_id, f"{match_base_dir}/map"):
         resulting_events.append(Event(token=map_id, status_code=EventStatus.FILE_NOT_FOUND.value,
                      title='failed to fetch the map!'))
+        resulting_events.append(Event(token=game_id, status_code=EventStatus.MATCH_NOT_PROVIDED.value,
+                         title='failed to fetch the map!'))
         return resulting_events
 
     # run match
