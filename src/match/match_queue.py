@@ -44,6 +44,8 @@ def fetch() -> Match:
         fetched.append((m.game_id,msg))
         return m
     except:
+        logger.warning(f"recived malformed message [{msg}]")
+        logger.warning("ignoring...")
         match_consumer.commit(message=msg)
         return None
 
