@@ -34,6 +34,7 @@ def download_code(code_id, dest) -> bool:
         os.remove('binary')
         logger.info("removed previous binary")
     except:
+        # file didnt exist :)
         pass
 
     # unzip source binary
