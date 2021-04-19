@@ -29,6 +29,13 @@ def download_code(code_id, dest) -> bool:
         return False
 
 
+    # remove previous binary
+    try:
+        os.remove('binary')
+        logger.info("removed previous binary")
+    except:
+        pass
+
     # unzip source binary
     with open('code.tgz', 'wb') as f:
         f.write(zip_file)
