@@ -116,6 +116,10 @@ def new_isol_area():
 
 def rm_isol_area():
     shutil.rmtree(match_base_dir)
+    # delete all temprory shitty python files
+    # find a better way later
+    os.system("rm -rf /tmp/_*")
+    
     logger.info(f"isolated area is removed")
 
 
