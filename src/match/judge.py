@@ -5,6 +5,7 @@ import logging
 import subprocess
 import json
 import os
+import rm
 import shutil
 
 
@@ -29,17 +30,13 @@ def download_code(code_id, dest) -> bool:
         return False
 
 
-    # remove previous binary
+    # remove previous binary by force!!!!
     try:
-        os.remove('binary')
+        rm.rm('binary')
         logger.info("removed previous binary")
     except:
-        # directory perhaps?
-        try:
-            os.rmdir('binary')
-        except
-            # file didnt exist :)
-            pass
+        # file didnt exist :)
+        pass
 
     # unzip source binary
     with open('code.tgz', 'wb') as f:
