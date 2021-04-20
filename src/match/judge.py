@@ -34,8 +34,12 @@ def download_code(code_id, dest) -> bool:
         os.remove('binary')
         logger.info("removed previous binary")
     except:
-        # file didnt exist :)
-        pass
+        # directory perhaps?
+        try:
+            os.rmdir('binary')
+        except
+            # file didnt exist :)
+            pass
 
     # unzip source binary
     with open('code.tgz', 'wb') as f:
@@ -54,6 +58,7 @@ def download_code(code_id, dest) -> bool:
     cmd.communicate()
     if cmd.returncode != 0:
         return False
+
     logger.info(f"successfuly moved binary [{code_id}] to [{dest}]")
 
     
