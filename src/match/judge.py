@@ -21,55 +21,36 @@ match_log_path = f"{match_base_dir}/Log/server/server.log"
 match_timeout= int(os.getenv("MATCH_TIMEOUT"))
 match_runcommand=["match", "--first-team=/etc/spawn/1", "--second-team=/etc/spawn/2", "--read-map=map"]
 
-
 def download_code(code_id, dest) -> bool:
     logger.info(f"start processing code [{code_id}]")
-
-    zip_file = MinioClient.get_compiled_code(code_id)
-    if zip_file is None:
-        return False
-
-
-    # remove previous binary by force!!!!
     try:
-        rm.rm('binary')
+        zip_file = MinioClient.get_compiled_code(code_id)
+        if zip_file is None:
+            return False
+
+        # remove previous binary by force!!!!
+        os.system('rm -rf binary')
         logger.info("removed previous binary")
+
+        # unzip source binary
+        with open('code.tgz', 'wb') as f:
+            f.write(zip_file)
+        if os.system("tar -xvzf code.tgz")!=0:
+            return False
+        logger.info(f"successfuly unziped binary [{code_id}]")
+        
+        # move binary to given dest
+        os.rename('binary',dest);
+        logger.info(f"successfuly moved binary [{code_id}] to [{dest}]")
+        
+        # give execute permission to new binary
+        os.chmod(dest, os.stat(dest).st_mode | stat.S_IEXEC)
+        logger.info(f"[{dest}] is now executable")
+        
+        # cleanup the code.tgz file
+        os.remove("code.tgz")
     except:
-        # file didnt exist :)
-        pass
-
-    # unzip source binary
-    with open('code.tgz', 'wb') as f:
-        f.write(zip_file)
-    cmd = subprocess.Popen(["tar", "-xvzf", "code.tgz"],
-                           stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
-    cmd.communicate()
-    if cmd.returncode != 0:
         return False
-    logger.info(f"successfuly unziped binary [{code_id}]")
-
-
-    # move binary to given dest
-    cmd = subprocess.Popen(
-        ["mv", "binary", dest], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
-    cmd.communicate()
-    if cmd.returncode != 0:
-        return False
-
-    logger.info(f"successfuly moved binary [{code_id}] to [{dest}]")
-
-    
-    # give execute permission to new binary
-    cmd = subprocess.Popen(
-        ["chmod", "+x", dest], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
-    cmd.communicate()
-    if cmd.returncode != 0:
-        return False
-    logger.info(f"[{dest}] is now executable")
-    
-
-    # cleanup the code.tgz file
-    os.remove("code.tgz")
     return True
 
 
@@ -99,8 +80,8 @@ def __judge() -> int:
         logger.warning("match returned none zero exitcode!")
         return -1
     finally:
+        # just to make sure every client is dead
         os.system("kill -9 `ps -aux | grep spawn | awk '{print$2}'`")
-        
         
     logger.debug(output)
     return 0
@@ -119,7 +100,6 @@ def rm_isol_area():
     # delete all temprory shitty python files
     # find a better way later
     os.system("rm -rf /tmp/_*")
-    
     logger.info(f"isolated area is removed")
 
 
@@ -149,14 +129,19 @@ def judge(players, map_id, game_id) -> [Event]:
 
     # run match
     exit_code=__judge()
+    try:
+        # extract the match stats      
+        stats = str(json.load(open(match_record_path))[STATS_KEYNAME])
+    except:
+        stats = ""
+    
     if exit_code == -1:
         resulting_events.append(Event(token=game_id, status_code=EventStatus.MATCH_FAILED.value,
-                                title='failed to hold the match'))
+                                title='failed to hold the match', message_body=stats))
     elif exit_code == -2:
         resulting_events.append(Event(token=game_id, status_code=EventStatus.MATCH_TIMEOUT.value,
-                                title='match timeout exceeded'))    
+                                title='match timeout exceeded', message_body=stats))   
     elif exit_code == 0:
-        stats = str(json.load(open(match_record_path))[STATS_KEYNAME])
         resulting_events.append(Event(token=game_id, status_code=EventStatus.MATCH_SUCCESS.value,
                  title='match finished successfully!', message_body=stats))
     
