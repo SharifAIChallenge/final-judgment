@@ -5,6 +5,8 @@ import logging
 import subprocess
 import json
 import os
+import stat
+
 
 logger=logging.getLogger("judge")
 
