@@ -134,6 +134,7 @@ def judge(players, map_id, game_id) -> [Event]:
         stats = str(json.load(open(match_record_path))[STATS_KEYNAME])
     except:
         stats = ""
+        logger.warning("failed fo fetch match stats")
     
     if exit_code == -1:
         resulting_events.append(Event(token=game_id, status_code=EventStatus.MATCH_FAILED.value,
