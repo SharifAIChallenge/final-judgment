@@ -2,7 +2,7 @@ from confluent_kafka import Consumer
 from os import getenv
 import logging
 import json
-from socket import gethostbyname
+from socket import gethostname
 
 from match.match import Match
 
