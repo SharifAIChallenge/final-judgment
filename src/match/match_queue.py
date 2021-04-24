@@ -18,8 +18,7 @@ match_consumer = Consumer({
     'group.id': KAFKA_TOPIC_CONSUMER_GROUP,
     'auto.offset.reset': 'latest',
     'enable.auto.offset.store':False,
-    'client.id': gethostname(),
-    'consumer.id': gethostname(),
+    'client.id': f'{gethostname()}',
     'enable.auto.commit': False,
     'session.timeout.ms': 10*1000,      #10 seconds
     'max.poll.interval.ms': 30*60*1000,  #30 minutes
