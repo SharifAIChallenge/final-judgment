@@ -9,10 +9,13 @@ KAFKA_ENDPOINT = getenv('KAFKA_ENDPOINT')
 KAFKA_TOPIC_EVENTS = getenv('KAFKA_TOPIC_EVENTS')
 
 
-p = Producer({'bootstrap.servers': KAFKA_ENDPOINT})
+p = Producer({
+    'bootstrap.servers': KAFKA_ENDPOINT,
+    'value.serializer': lambda dic:json.dumps(dic).encode('utf-8') 
+    })
 
-def __serilize(dic):
-    return json.dumps(dic).encode('utf-8')
+# def __serilize(dic):
+#     return json.dumps(dic).encode('utf-8')
 
 def __on_deliver(err,msg):
     """ Called once for each message produced to indicate delivery result.
@@ -32,7 +35,7 @@ def __push_data(data):
     # Asynchronously produce a message, the delivery report callback
     # will be triggered from poll() above, or flush() below, when the message has
     # been successfully delivered or failed permanently.
-    p.produce(KAFKA_TOPIC_EVENTS, __serilize(data), callback=__on_deliver)
+    p.produce(KAFKA_TOPIC_EVENTS, data, callback=__on_deliver)
 
 def push(event):
     __push_data(event.__dict__)
